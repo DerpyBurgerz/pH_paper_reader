@@ -5,8 +5,7 @@ import typing
 
 
 def run():
-    input_path = "universal_indicator.jpeg"
-    output_path = "universal_indicator_out.jpeg"
+    input_path = "very basic.jpeg"
 
     # Load image
     image = load_image(input_path)
@@ -22,8 +21,6 @@ def run():
     # can be used to fill undetected squares
     centroids = list(zip([get_centroids(c) for c in cnts], cnts))
     sorted_centroids = sort_centroids(centroids)
-
-    save_image(processed_image, output_path)
 
 if __name__ == "__main__":
     run()

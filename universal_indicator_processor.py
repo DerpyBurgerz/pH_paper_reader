@@ -15,7 +15,8 @@ def find_contours(image):
     save_image(sharpen, "sharpen.png")
 
     # Threshold and morph close
-    thresh = cv.threshold(sharpen, 170, 255, cv.THRESH_BINARY_INV)[1]
+    thresh = cv.threshold(sharpen, 160, 255, cv.THRESH_BINARY_INV)[1]
+    # thresh = cv.adaptiveThreshold(sharpen, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 219, 2)
     kernel = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
     close = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel, iterations=2)
     open = cv.morphologyEx(close, cv.MORPH_OPEN, kernel, iterations=2)
@@ -27,7 +28,7 @@ def find_contours(image):
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
     median_area = np.median([cv.contourArea(c) for c in cnts])
-    cnts = [c for c in cnts if cv.contourArea(c) * 0.8 < median_area < cv.contourArea(c) * 1.2]
+    cnts = [c for c in cnts if cv.contourArea(c) * 0.7 < median_area < cv.contourArea(c) * 1.3]
     #todo: remove this copy once finished. Not needed in end thing, is here purely for debugging
     contour_image = image.copy()
     cv.drawContours(contour_image, cnts, -1, (255, 255, 0), 2)
@@ -79,6 +80,8 @@ def sort_centroids(centroid_contour_tuple):
         contour_dict[i] = cnts
 
     return contour_dict
+
+# anything below this does not get used, was just for some experiments
 
 def canny_process_image(image):
     image = cv.dilate(image, None, iterations=3)
