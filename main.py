@@ -1,5 +1,5 @@
 from io_utils import load_image, save_image
-from processor import process_image
+from not_used_processor import process_image
 
 def run():
     input_path = "pH_colors.png"
@@ -8,6 +8,7 @@ def run():
     # Load image
     image = load_image(input_path)
     if image is None:
+        print("Error: Could not load image.")
         return
 
     processed_image = process_image(image)
