@@ -12,6 +12,7 @@ def load_image(path):
 
 def save_image(image, path):
     """Safely saves an image to the given path."""
+    path = "images/" + path
     success = cv2.imwrite(path, image)
     if success:
         print(f"Image saved to {path}")
