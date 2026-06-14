@@ -5,7 +5,7 @@ import typing
 
 
 def run():
-    input_path = "very basic.jpeg"
+    input_path = "neutral.jpeg"
 
     # Load image
     image = load_image(input_path)
@@ -20,7 +20,14 @@ def run():
     # step 9 in that link
     # can be used to fill undetected squares
     centroids = list(zip([get_centroids(c) for c in cnts], cnts))
-    sorted_centroids = sort_centroids(centroids)
+    sorted_contours = sort_centroids(centroids)
+
+    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
+    pH_hue_dict = dict()
+    for i in range(0, 15):
+        pH_hue_dict[i] = [get_hue(hsv, cnt) for cnt in sorted_contours[i]]
+
+    print()
 
 if __name__ == "__main__":
     run()

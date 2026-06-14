@@ -15,7 +15,7 @@ def find_contours(image):
     save_image(sharpen, "sharpen.png")
 
     # Threshold and morph close
-    thresh = cv.threshold(sharpen, 160, 255, cv.THRESH_BINARY_INV)[1]
+    thresh = cv.threshold(sharpen, 154, 255, cv.THRESH_BINARY_INV)[1]
     # thresh = cv.adaptiveThreshold(sharpen, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 219, 2)
     kernel = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
     close = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel, iterations=2)
@@ -80,6 +80,30 @@ def sort_centroids(centroid_contour_tuple):
         contour_dict[i] = cnts
 
     return contour_dict
+
+def get_hue(image, cntr):
+    hue_channel = image[:, :, 0]
+
+    mask = np.zeros(image.shape[:2], np.uint8)
+    cv.drawContours(mask, [cntr], -1, 255, -1)
+
+    masked_hues = hue_channel[mask == 255]
+
+    angles = np.deg2rad(2 * masked_hues.astype(np.float64))
+
+    # Circular mean of angles
+    sin_mean = np.mean(np.sin(angles))
+    cos_mean = np.mean(np.cos(angles))
+    mean_angle_rad = np.arctan2(sin_mean, cos_mean)
+
+    # Convert back to hue range 0–180
+    mean_hue = np.rad2deg(mean_angle_rad) / 2.0
+    if mean_hue < 0:
+        mean_hue += 180.0
+
+    save_image(mask, "mask.png")
+    return mean_hue
+
 
 # anything below this does not get used, was just for some experiments
 
