@@ -27,9 +27,12 @@ def find_contours(image):
     cnts = cv.findContours(open, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
+    a = image.copy()
+    cv.drawContours(a, cnts, -1, (255, 255, 0), 2)
+    save_image(a, "not_filtered_contours.png")
+
     median_area = np.median([cv.contourArea(c) for c in cnts])
     cnts = [c for c in cnts if cv.contourArea(c) * 0.7 < median_area < cv.contourArea(c) * 1.3]
-    #todo: remove this copy once finished. Not needed in end thing, is here purely for debugging
     contour_image = image.copy()
     cv.drawContours(contour_image, cnts, -1, (255, 255, 0), 2)
     save_image(contour_image, "contours.png")
